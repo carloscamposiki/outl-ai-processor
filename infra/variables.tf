@@ -8,11 +8,6 @@ variable "role_arn" {
   type        = string
 }
 
-variable "dynamo_trends_table_name" {
-  description = "The name of the DynamoDB table for trends"
-  type        = string
-}
-
 variable "queue_processing_trends" {
     description = "The SQS queue for processing trends"
     type        = string
