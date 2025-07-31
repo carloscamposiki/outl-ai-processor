@@ -1,0 +1,54 @@
+name: PR to develop
+on:
+  push:
+    branches:
+      - feature/*
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      working-directory: app
+      run: pip install -r requirements-test.txt
+
+    - name: Set PYTHONPATH
+      run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)/app" >> $GITHUB_ENV
+
+    - name: Run unit tests
+      working-directory: app
+      run: pytest --maxfail=5 --disable-warnings
+
+  create-mr:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Install GitHub CLI
+      run: sudo apt-get install -y gh
+
+    - name: Create PR to develop
+      run: |
+          set -euo pipefail
+          PR_TITLE="Merge feature branch to develop"
+          PR_BODY="This PR merges the feature branch into develop."
+          gh pr create --base develop --head ${{ github.ref }} --title "$PR_TITLE" --body "$PR_BODY" --label "auto-generated"
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

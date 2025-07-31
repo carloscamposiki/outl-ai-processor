@@ -1,0 +1,58 @@
+name: Deploy to Prod
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.6.6
+
+    - name: Configure AWS credentials (OIDC)
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: arn:aws:iam::496993584089:role/githubactions-oidc-role
+        role-session-name: github-actions
+        aws-region: us-east-1
+
+    - name: Package Lambda ZIP
+      run: |
+        set -euo pipefail
+        ARTIFACT_DIR=infra
+        mkdir -p lambda_build "${ARTIFACT_DIR}"
+        cp -r app/* lambda_build/
+        # Install deps into the bundle (correct path to requirements.txt)
+        if [ -f app/requirements.txt ]; then
+          python3 -m pip install -r app/requirements.txt -t lambda_build/
+        fi
+        (cd lambda_build && zip -r "../${ARTIFACT_DIR}/lambda.zip" .)
+
+    - name: Terraform Init
+      working-directory: infra
+      run: terraform init -backend-config="key=prod/terraform.tfstate"
+
+    - name: Select Terraform Workspace
+      working-directory: infra
+      run: terraform workspace select prod || terraform workspace new prod
+
+    - name: Terraform Plan
+      working-directory: infra
+      run: terraform init -backend-config="key=prod/ool-processor/terraform.tfstate"
+
+    - name: Terraform Apply
+      working-directory: infra
+      run: terraform apply -auto-approve -var-file="inventories/prod/terraform.tfvars"
