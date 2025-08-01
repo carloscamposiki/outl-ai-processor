@@ -12,7 +12,7 @@ class BedrockAdapter:
             response = self.client.invoke_model(
                 modelId=model_id,
                 body=json.dumps(self.build_body(input_text)),
-                contentType='text/plain'
+                contentType='application/json'
             )
             return response['body'].read().decode('utf-8')
         except Exception as e:

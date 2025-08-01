@@ -30,7 +30,7 @@ class TestBedrockAdapter(unittest.TestCase):
         mock_client_instance.invoke_model.assert_called_once_with(
             modelId=model_id,
             body=json.dumps(expected_body),
-            contentType='text/plain'
+            contentType='application/json'
         )
 
     @patch('src.adapter.aws.bedrock.boto3.client')
@@ -55,7 +55,7 @@ class TestBedrockAdapter(unittest.TestCase):
         mock_client_instance.invoke_model.assert_called_once_with(
             modelId=model_id,
             body=json.dumps(expected_body),
-            contentType='text/plain'
+            contentType='application/json'
         )
 
 
