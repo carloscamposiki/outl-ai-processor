@@ -16,7 +16,7 @@ Rules:
 5) Avoid slurs, profanity, and sensitive PII; keep a neutral tone.
 6) Prefer the majority viewpoint; if two themes tie, pick the one more aligned with the provided trending_topic.
 7) If you cannot confidently infer a single main theme, return status=false and summary=null.
-8) Summary must have the following structure: "<trend_name>": <summary>
+8) Summary must have the following structure: <trend_name>: <summary>
 
 Confidence policy (guide, not output):
 - Set status=true only if ≥ ~60% of remaining posts align on the same core topic/claim/event.
@@ -31,7 +31,7 @@ Output (JSON only):
 Example of valid output:
 {
   "status": true,
-  "summary": "\"Earthquake\": Many are discussing the recent earthquake, sharing safety tips and personal experiences. Most posts express concern for affected areas and urge preparedness."
+  "summary": "Earthquake: Many are discussing the recent earthquake, sharing safety tips and personal experiences. Most posts express concern for affected areas and urge preparedness."
 }
 
 Validation:

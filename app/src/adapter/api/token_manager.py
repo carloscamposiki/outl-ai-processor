@@ -101,8 +101,8 @@ class TokenManager:
 
         if response.status_code == 200:
             return {
-                'token': f'Bearer{response.json().get("accessJwt")}',
-                'refresh_token': f'Bearer{response.json().get("refreshJwt")}'
+                'token': response.json().get("accessJwt"),
+                'refresh_token': response.json().get("refreshJwt")
             }
         elif response.status_code == 400:
             raise BlueSkyException('Invalid refresh token')

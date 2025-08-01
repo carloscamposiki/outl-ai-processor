@@ -12,3 +12,8 @@ variable "queue_processing_trends" {
     description = "The SQS queue for processing trends"
     type        = string
 }
+
+variable "environment" {
+  description = "The environment for the Lambda function (e.g., dev, prod)"
+  type        = string
+}
