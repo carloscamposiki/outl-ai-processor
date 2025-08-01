@@ -30,6 +30,14 @@ trends_processor = TrendsProcessor(post_sender=post_sender,
                                    summary_fetcher=summary_fetcher)
 
 def lambda_handler(event, __):
+    if 'trend' in event:
+        # This is a direct invocation with a trend
+        trend = event['trend']
+        posts = event['posts']
+        trends_processor.process(trend, posts)
+        return {
+            'statusCode': 200
+        }
     for sqs_record in event['Records']:
         trend = json.loads(sqs_record['body'])
         trends_processor.process(trend['trend'], trend['posts'])

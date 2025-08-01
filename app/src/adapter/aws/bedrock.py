@@ -1,5 +1,5 @@
 import boto3
-
+import json
 
 class BedrockAdapter:
 
@@ -11,10 +11,16 @@ class BedrockAdapter:
         try:
             response = self.client.invoke_model(
                 modelId=model_id,
-                body=input_text,
+                body=json.dumps(self.build_body(input_text)),
                 contentType='text/plain'
             )
             return response['body'].read().decode('utf-8')
         except Exception as e:
             print(f'Error invoking Bedrock model {model_id}: {e}')
             raise
+
+    def build_body(self, input_text: str) -> dict:
+        return {
+            'prompt': input_text,
+            'max_tokens_to_sample': 2000
+        }
