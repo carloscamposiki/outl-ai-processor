@@ -28,6 +28,6 @@ resource "aws_lambda_function" "lambda_function" {
 
 resource "aws_lambda_event_source_mapping" "mapping" {
   function_name = aws_lambda_function.lambda_function.arn
-  event_source_arn = var.queue_processing_trends
+  event_source_arn = "arn:aws:sqs:us-east-1:496993584089:${var.queue_processing_trends}"
   batch_size = 1
 }
