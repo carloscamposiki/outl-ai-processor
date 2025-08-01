@@ -11,26 +11,34 @@ class TestBedrockAdapter(unittest.TestCase):
         mock_client_instance = MagicMock()
         mock_boto_client.return_value = mock_client_instance
         mock_response = MagicMock()
-        mock_response['body'].read.return_value = b'{"result": "success"}'
+        mock_response['body'].read.return_value = b'{"output": {"message": {"content": [{"text": "Test output"}]}}}'
         mock_client_instance.invoke_model.return_value = mock_response
 
         adapter = BedrockAdapter()
         model_id = "test-model"
         input_text = "test input"
         expected_body = {
-            'prompt': f'\n\nHuman:\n\n{input_text}\n\nAssistant:\n\n',
-            'max_tokens_to_sample': 2000
+            "schemaVersion": "messages-v1",
+            "messages": [{"role": "user", "content": [{"text": input_text}]}],
+            "system": [{"text": "You are a summarizer assistant."}],
+            "inferenceConfig": {
+                "maxTokens": 500,
+                "topP": 0.9,
+                "topK": 20,
+                "temperature": 0.7
+            }
         }
 
         # Act
         result = adapter.invoke_model(model_id, input_text)
 
         # Assert
-        self.assertEqual(result, '{"result": "success"}')
+        self.assertEqual(result, "Test output")
         mock_client_instance.invoke_model.assert_called_once_with(
             modelId=model_id,
             body=json.dumps(expected_body),
-            contentType='application/json'
+            contentType="application/json",
+            accept="application/json"
         )
 
     @patch('src.adapter.aws.bedrock.boto3.client')
@@ -44,8 +52,15 @@ class TestBedrockAdapter(unittest.TestCase):
         model_id = "test-model"
         input_text = "test input"
         expected_body = {
-            'prompt': f'\n\nHuman:\n\n{input_text}\n\nAssistant:\n\n',
-            'max_tokens_to_sample': 2000
+            "schemaVersion": "messages-v1",
+            "messages": [{"role": "user", "content": [{"text": input_text}]}],
+            "system": [{"text": "You are a summarizer assistant."}],
+            "inferenceConfig": {
+                "maxTokens": 500,
+                "topP": 0.9,
+                "topK": 20,
+                "temperature": 0.7
+            }
         }
 
         # Act & Assert
@@ -55,7 +70,8 @@ class TestBedrockAdapter(unittest.TestCase):
         mock_client_instance.invoke_model.assert_called_once_with(
             modelId=model_id,
             body=json.dumps(expected_body),
-            contentType='application/json'
+            contentType="application/json",
+            accept="application/json"
         )
 
 

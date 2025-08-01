@@ -13,4 +13,4 @@ class TrendsProcessor:
     def process(self, trend_name: str, posts:list[str]) -> None:
         summary = self.summary_fetcher.fetch(trend_name=trend_name,
                                              posts=posts)
-        self.post_sender.send(trend_name, summary)
+        self.post_sender.send(summary)
