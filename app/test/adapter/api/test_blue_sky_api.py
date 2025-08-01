@@ -1,6 +1,7 @@
 # python
 import unittest
 from unittest.mock import MagicMock, patch
+import os
 from src.adapter.api.blue_sky_api import BlueSkyAPI
 from src.exception.blue_sky_exception import BlueSkyException
 from src.adapter.api.token_manager import TokenManager
@@ -19,6 +20,7 @@ class TestBlueSkyAPI(unittest.TestCase):
     def test_make_post_success(self, mock_post):
         """ Test successful post creation """
         # Arrange
+        os.environ['ENVIRONMENT'] = 'production'  # Simulate production environment
         text = "Test post content"
         mock_response = MagicMock()
         mock_response.status_code = 200
@@ -40,6 +42,7 @@ class TestBlueSkyAPI(unittest.TestCase):
     def test_make_post_failure(self, mock_post):
         """ Test when post creation fails """
         # Arrange
+        os.environ['ENVIRONMENT'] = 'production'  # Simulate production environment
         text = "Test post content"
         mock_response = MagicMock()
         mock_response.status_code = 500

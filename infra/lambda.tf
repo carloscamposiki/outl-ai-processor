@@ -19,7 +19,8 @@ resource "aws_lambda_function" "lambda_function" {
     variables = {
       SESSION_SECRET_NAME = "ool/bluesky/token",
       BLUE_SKY_CREDENTIALS_SECRET_NAME = "ool/bluesky/credentials",
-      BEDROCK_MODEL_NAME = "amazon.nova-pro-v1:0"
+      BEDROCK_MODEL_NAME = "amazon.nova-pro-v1:0",
+      ENVIRONMENT = var.environment
     }
   }
 

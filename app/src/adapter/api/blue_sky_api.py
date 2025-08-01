@@ -2,13 +2,18 @@ import requests
 from src.exception.blue_sky_exception import BlueSkyException
 from src.adapter.api.token_manager import TokenManager
 from datetime import datetime, timezone
-
+import os
 class BlueSkyAPI:
 
     def __init__(self, token_generator: TokenManager):
         self.token_generator = token_generator
 
     def make_post(self, text: str) -> None:
+        env = os.getenv('ENVIRONMENT', 'development')
+        if env == 'development':
+            print(f"Post content: {text}")
+            return
+
         url = 'https://bsky.social/xrpc/com.atproto.repo.createRecord'
         token = self.token_generator.get_session().get_token()
         headers = {'Authorization': token}
