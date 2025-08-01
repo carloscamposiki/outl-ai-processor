@@ -18,7 +18,7 @@ class TestBedrockAdapter(unittest.TestCase):
         model_id = "test-model"
         input_text = "test input"
         expected_body = {
-            'prompt': f'\n\nHuman:\n\n{input_text}',
+            'prompt': f'\n\nHuman:\n\n{input_text}\n\nAssistant:\n\n',
             'max_tokens_to_sample': 2000
         }
 
@@ -44,7 +44,7 @@ class TestBedrockAdapter(unittest.TestCase):
         model_id = "test-model"
         input_text = "test input"
         expected_body = {
-            'prompt': f'\n\nHuman:\n\n{input_text}',
+            'prompt': f'\n\nHuman:\n\n{input_text}\n\nAssistant:\n\n',
             'max_tokens_to_sample': 2000
         }
 
