@@ -21,6 +21,6 @@ class BedrockAdapter:
 
     def build_body(self, input_text: str) -> dict:
         return {
-            'prompt': input_text,
+            'prompt': f'\n\nHuman:\n\n{input_text}',
             'max_tokens_to_sample': 2000
         }
