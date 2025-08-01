@@ -19,6 +19,7 @@ resource "aws_lambda_function" "lambda_function" {
     variables = {
       SESSION_SECRET_NAME = "ool/bluesky/token",
       BLUE_SKY_CREDENTIALS_SECRET_NAME = "ool/bluesky/credentials",
+      BEDROCK_MODEL_NAME = "anthropic.claude-sonnet-4-20250514-v1:0"
     }
   }
 

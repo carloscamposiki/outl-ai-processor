@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
 from src.adapter.aws.bedrock import BedrockAdapter
-
+import json
 
 class TestBedrockAdapter(unittest.TestCase):
 
@@ -17,6 +17,10 @@ class TestBedrockAdapter(unittest.TestCase):
         adapter = BedrockAdapter()
         model_id = "test-model"
         input_text = "test input"
+        expected_body = {
+            'prompt': input_text,
+            'max_tokens_to_sample': 2000
+        }
 
         # Act
         result = adapter.invoke_model(model_id, input_text)
@@ -25,7 +29,7 @@ class TestBedrockAdapter(unittest.TestCase):
         self.assertEqual(result, '{"result": "success"}')
         mock_client_instance.invoke_model.assert_called_once_with(
             modelId=model_id,
-            body=input_text,
+            body=json.dumps(expected_body),
             contentType='text/plain'
         )
 
@@ -39,6 +43,10 @@ class TestBedrockAdapter(unittest.TestCase):
         adapter = BedrockAdapter()
         model_id = "test-model"
         input_text = "test input"
+        expected_body = {
+            'prompt': input_text,
+            'max_tokens_to_sample': 2000
+        }
 
         # Act & Assert
         with self.assertRaises(Exception) as context:
@@ -46,7 +54,7 @@ class TestBedrockAdapter(unittest.TestCase):
         self.assertIn("Test error", str(context.exception))
         mock_client_instance.invoke_model.assert_called_once_with(
             modelId=model_id,
-            body=input_text,
+            body=json.dumps(expected_body),
             contentType='text/plain'
         )
 
