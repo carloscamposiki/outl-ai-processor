@@ -1,3 +1,4 @@
+# python
 import unittest
 from unittest.mock import MagicMock, patch
 from src.adapter.api.blue_sky_api import BlueSkyAPI
@@ -27,11 +28,13 @@ class TestBlueSkyAPI(unittest.TestCase):
         self.blue_sky_api.make_post(text)
 
         # Assert
-        mock_post.assert_called_once_with(
-            'https://bsky.social/xrpc/app.bsky.unspecced.makePost',
-            json={'text': text},
-            headers={'Authorization': 'mock_token'}
-        )
+        mock_post.assert_called_once()
+        actual_call_args = mock_post.call_args[1]  # Get the keyword arguments of the call
+        self.assertEqual(actual_call_args['headers'], {'Authorization': 'mock_token'})
+        self.assertEqual(actual_call_args['json']['repo'], 'outoftheloop-ai.bsky.social')
+        self.assertEqual(actual_call_args['json']['collection'], "app.bsky.feed.post")
+        self.assertEqual(actual_call_args['json']['record']['$type'], "app.bsky.feed.post")
+        self.assertEqual(actual_call_args['json']['record']['text'], text)
 
     @patch('src.adapter.api.blue_sky_api.requests.post')
     def test_make_post_failure(self, mock_post):
@@ -51,11 +54,13 @@ class TestBlueSkyAPI(unittest.TestCase):
             str(context.exception),
             'Failed to make post: 500 - Internal Server Error'
         )
-        mock_post.assert_called_once_with(
-            'https://bsky.social/xrpc/app.bsky.unspecced.makePost',
-            json={'text': text},
-            headers={'Authorization': 'mock_token'}
-        )
+        mock_post.assert_called_once()
+        actual_call_args = mock_post.call_args[1]  # Get the keyword arguments of the call
+        self.assertEqual(actual_call_args['headers'], {'Authorization': 'mock_token'})
+        self.assertEqual(actual_call_args['json']['repo'], 'outoftheloop-ai.bsky.social')
+        self.assertEqual(actual_call_args['json']['collection'], "app.bsky.feed.post")
+        self.assertEqual(actual_call_args['json']['record']['$type'], "app.bsky.feed.post")
+        self.assertEqual(actual_call_args['json']['record']['text'], text)
 
 
 if __name__ == '__main__':

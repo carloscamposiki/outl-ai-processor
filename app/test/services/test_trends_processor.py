@@ -32,7 +32,7 @@ class TestTrendsProcessor(unittest.TestCase):
             trend_name=trend_name, posts=posts
         )
         self.mock_post_sender.send.assert_called_once_with(
-            trend_name, summary
+            summary
         )
 
     def test_process_fetch_failure(self):
