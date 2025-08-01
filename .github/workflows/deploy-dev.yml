@@ -49,10 +49,6 @@ jobs:
       working-directory: infra
       run: terraform workspace select dev || terraform workspace new dev
 
-#    - name: Terraform Plan
-#      working-directory: infra
-#      run: terraform plan -var-file="inventories/dev/terraform.tfvars"
-
     - name: Terraform Apply
       working-directory: infra
       run: terraform apply -auto-approve -var-file="inventories/dev/terraform.tfvars"

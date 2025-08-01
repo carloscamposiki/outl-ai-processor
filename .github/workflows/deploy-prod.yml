@@ -49,10 +49,6 @@ jobs:
       working-directory: infra
       run: terraform workspace select prod || terraform workspace new prod
 
-    - name: Terraform Plan
-      working-directory: infra
-      run: terraform init -backend-config="key=prod/ool-processor/terraform.tfstate"
-
     - name: Terraform Apply
       working-directory: infra
       run: terraform apply -auto-approve -var-file="inventories/prod/terraform.tfvars"
